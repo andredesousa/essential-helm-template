@@ -1,0 +1,32 @@
+suite: V2 test deployment
+values:
+  - ../values.yaml
+templates:
+  - base-future-deployment.yaml
+tests:
+  - it: should pass all kinds of assertion
+    documentIndex: 0
+    asserts:
+      - hasDocuments:
+          count: 2
+      - isAPIVersion:
+          of: apps/v1
+      - isKind:
+          of: Deployment
+      - isNotNull:
+          path: spec.template
+      - isNotEmpty:
+          path: spec.template.spec.containers[0]
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: mcr.microsoft.com/azuredocs/aks-helloworld:v1
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            containerPort: 8080
+      - notContains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            containerPort: 80
+      - matchSnapshot:
+          path: spec

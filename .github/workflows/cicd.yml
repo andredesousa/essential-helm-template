@@ -1,0 +1,31 @@
+name: Helm CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: atc-ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/setup-helm@v1
+
+      - name: Install dependencies
+        run: |
+          helm plugin install https://github.com/quintush/helm-unittest
+          helm plugin install https://github.com/instrumenta/helm-kubeval
+          helm dependency update
+
+      - name: Code Quality
+        run: helm lint --strict
+
+      - name: Unit Tests
+        run: helm unittest --helm3 .
+
+      - name: Integration Tests
+        run: helm kubeval --strict --ignore-missing-schemas .

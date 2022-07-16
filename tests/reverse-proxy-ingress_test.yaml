@@ -1,0 +1,43 @@
+suite: Ingress test deployment
+values:
+  - ../values.yaml
+templates:
+  - reverse-proxy-ingress.yaml
+tests:
+  - it: should pass all kinds of assertion
+    documentIndex: 0
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isAPIVersion:
+          of: networking.k8s.io/v1
+      - isKind:
+          of: Ingress
+      - equal:
+          path: metadata.annotations
+          value:
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /$2
+      - contains:
+          path: spec.rules[0].http.paths
+          content:
+            path: /v1(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: aks-current-api
+                port:
+                  number: 80
+      - contains:
+          path: spec.rules[0].http.paths
+          content:
+            path: /v2(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: aks-future-api
+                port:
+                  number: 80
+      - matchSnapshot:
+          path: spec

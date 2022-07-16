@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.current.name }}"
+  labels:
+    app: "{{ .Values.current.name }}"
+spec:
+  replicas: {{ .Values.current.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: "{{ .Values.current.name }}"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Values.current.name }}"
+    spec:
+      containers:
+        - name: "{{ .Values.current.name }}"
+          image: "{{ .Values.current.deployment.image }}:{{ .Values.current.deployment.tag }}"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: TITLE
+              value: "Welcome to Azure Kubernetes Service (AKS)"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Values.current.name }}"
+spec:
+  selector:
+    app: "{{ .Values.current.name }}"
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

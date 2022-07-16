@@ -1,0 +1,20 @@
+should pass all kinds of assertion:
+  1: |
+    replicas: 1
+    selector:
+      matchLabels:
+        app: aks-current-api
+    template:
+      metadata:
+        labels:
+          app: aks-current-api
+      spec:
+        containers:
+        - env:
+          - name: TITLE
+            value: Welcome to Azure Kubernetes Service (AKS)
+          image: mcr.microsoft.com/azuredocs/aks-helloworld:v1
+          imagePullPolicy: IfNotPresent
+          name: aks-current-api
+          ports:
+          - containerPort: 8080

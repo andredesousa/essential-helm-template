@@ -1,0 +1,27 @@
+should pass all kinds of assertion:
+  1: |
+    ingressClassName: nginx
+    rules:
+    - http:
+        paths:
+        - backend:
+            service:
+              name: aks-current-api
+              port:
+                number: 80
+          path: /v1(/|$)(.*)
+          pathType: Prefix
+        - backend:
+            service:
+              name: aks-future-api
+              port:
+                number: 80
+          path: /v2(/|$)(.*)
+          pathType: Prefix
+        - backend:
+            service:
+              name: aks-current-api
+              port:
+                number: 80
+          path: /(.*)
+          pathType: Prefix

@@ -1,0 +1,14 @@
+current:
+  name: aks-current-api
+  deployment:
+    image: mcr.microsoft.com/azuredocs/aks-helloworld
+    tag: v1
+    replicas: 1
+future:
+  name: aks-future-api
+  deployment:
+    image: mcr.microsoft.com/azuredocs/aks-helloworld
+    tag: v1
+    replicas: 1
+ingress:
+  name: reverse-proxy-ingress

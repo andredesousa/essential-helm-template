@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.future.name }}"
+  labels:
+    app: "{{ .Values.future.name }}"
+spec:
+  replicas: {{ .Values.future.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: "{{ .Values.future.name }}"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Values.future.name }}"
+    spec:
+      containers:
+        - name: "{{ .Values.future.name }}"
+          image: "{{ .Values.future.deployment.image }}:{{ .Values.future.deployment.tag }}"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: TITLE
+              value: "Welcome to new Azure Kubernetes Service (V2)"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Values.future.name }}"
+spec:
+  selector:
+    app: "{{ .Values.future.name }}"
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
