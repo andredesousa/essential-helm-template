@@ -20,7 +20,7 @@ spec:
           image: "{{ .Values.future.deployment.image }}:{{ .Values.future.deployment.tag }}"
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080
+            - containerPort: {{ .Values.future.deployment.port }}
           env:
             - name: TITLE
               value: "Welcome to new Azure Kubernetes Service (V2)"
@@ -35,5 +35,4 @@ spec:
   type: ClusterIP
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 8080
+      port: {{ .Values.future.deployment.port }}

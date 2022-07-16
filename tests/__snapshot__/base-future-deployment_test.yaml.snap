@@ -17,4 +17,4 @@ should pass all kinds of assertion:
           imagePullPolicy: IfNotPresent
           name: aks-future-api
           ports:
-          - containerPort: 8080
+          - containerPort: 80

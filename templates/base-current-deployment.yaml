@@ -20,7 +20,7 @@ spec:
           image: "{{ .Values.current.deployment.image }}:{{ .Values.current.deployment.tag }}"
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080
+            - containerPort: {{ .Values.current.deployment.port }}
           env:
             - name: TITLE
               value: "Welcome to Azure Kubernetes Service (AKS)"
@@ -35,5 +35,4 @@ spec:
   type: ClusterIP
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 8080
+      port: {{ .Values.current.deployment.port }}

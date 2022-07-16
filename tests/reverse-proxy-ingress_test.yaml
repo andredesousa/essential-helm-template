@@ -8,7 +8,7 @@ tests:
     documentIndex: 0
     asserts:
       - hasDocuments:
-          count: 1
+          count: 2
       - isAPIVersion:
           of: networking.k8s.io/v1
       - isKind:

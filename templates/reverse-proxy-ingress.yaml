@@ -11,25 +11,45 @@ spec:
   ingressClassName: nginx
   rules:
   - http:
-        paths:
-          - path: /v1(/|$)(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: "{{ .Values.current.name }}"
-                port:
-                  number: 80
-          - path: /v2(/|$)(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: "{{ .Values.future.name }}"
-                port:
-                  number: 80
-          - path: /(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: "{{ .Values.current.name }}"
-                port:
-                  number: 80
+      paths:
+        - path: /v1(/|$)(.*)
+          pathType: Prefix
+          backend:
+            service:
+              name: "{{ .Values.current.name }}"
+              port:
+                number: {{ .Values.current.deployment.port }}
+        - path: /v2(/|$)(.*)
+          pathType: Prefix
+          backend:
+            service:
+              name: "{{ .Values.future.name }}"
+              port:
+                number: {{ .Values.future.deployment.port }}
+        - path: /(.*)
+          pathType: Prefix
+          backend:
+            service:
+              name: "{{ .Values.current.name }}"
+              port:
+                number: {{ .Values.current.deployment.port }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "{{ .Values.ingress.static }}"
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /static/$2
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+        - path: /static(/|$)(.*)
+          pathType: Prefix
+          backend:
+            service:
+              name: "{{ .Values.current.name }}"
+              port:
+                number: {{ .Values.current.deployment.port }}

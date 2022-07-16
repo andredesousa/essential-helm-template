@@ -23,10 +23,6 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].ports
           content:
-            containerPort: 8080
-      - notContains:
-          path: spec.template.spec.containers[0].ports
-          content:
             containerPort: 80
       - matchSnapshot:
           path: spec

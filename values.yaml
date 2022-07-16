@@ -4,11 +4,14 @@ current:
     image: mcr.microsoft.com/azuredocs/aks-helloworld
     tag: v1
     replicas: 1
+    port: 80
 future:
   name: aks-future-api
   deployment:
     image: mcr.microsoft.com/azuredocs/aks-helloworld
     tag: v1
     replicas: 1
+    port: 80
 ingress:
   name: reverse-proxy-ingress
+  static: static-reverse-proxy-ingress
