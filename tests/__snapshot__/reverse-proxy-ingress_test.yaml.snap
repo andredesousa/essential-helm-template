@@ -1,4 +1,4 @@
-should pass all kinds of assertion:
+should match the snapshot:
   1: |
     ingressClassName: nginx
     rules:
@@ -24,4 +24,16 @@ should pass all kinds of assertion:
               port:
                 number: 80
           path: /(.*)
+          pathType: Prefix
+  2: |
+    ingressClassName: nginx
+    rules:
+    - http:
+        paths:
+        - backend:
+            service:
+              name: aks-current-api
+              port:
+                number: 80
+          path: /static(/|$)(.*)
           pathType: Prefix

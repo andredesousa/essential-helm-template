@@ -4,25 +4,63 @@ values:
 templates:
   - base-future-deployment.yaml
 tests:
-  - it: should pass all kinds of assertion
-    documentIndex: 0
+  - it: should have 2 documents
     asserts:
       - hasDocuments:
           count: 2
+  - it: should have a deployment document
+    documentIndex: 0
+    asserts:
       - isAPIVersion:
           of: apps/v1
       - isKind:
           of: Deployment
-      - isNotNull:
-          path: spec.template
       - isNotEmpty:
-          path: spec.template.spec.containers[0]
+          path: metadata
+      - isNotEmpty:
+          path: spec
       - equal:
+          path: spec.replicas
+          value: 1
+      - equal:
+          path: spec.selector.matchLabels.app
+          value: aks-future-api
+      - matchRegex:
           path: spec.template.spec.containers[0].image
-          value: mcr.microsoft.com/azuredocs/aks-helloworld:v1
+          pattern: mcr.microsoft.com\/azuredocs\/aks-helloworld
+      - equal:
+          path: spec.template.spec.containers[0].imagePullPolicy
+          value: IfNotPresent
       - contains:
           path: spec.template.spec.containers[0].ports
           content:
             containerPort: 80
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TITLE
+            value: "Welcome to new Azure Kubernetes Service (V2)"
+  - it: should have a service document
+    documentIndex: 1
+    asserts:
+      - isAPIVersion:
+          of: v1
+      - isKind:
+          of: Service
+      - isNotEmpty:
+          path: metadata
+      - isNotEmpty:
+          path: spec
+      - equal:
+          path: spec.selector.app
+          value: aks-future-api
+      - equal:
+          path: spec.type
+          value: ClusterIP
+      - contains:
+          path: spec.ports
+          content:
+            port: 80
+            protocol: TCP
       - matchSnapshot:
           path: spec
